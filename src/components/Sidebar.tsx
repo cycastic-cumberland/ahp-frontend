@@ -1,13 +1,12 @@
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-// import { useApp } from '../contexts/AppContext';
 import {FiBarChart2, FiEdit, FiHome, FiUpload} from "react-icons/fi";
 import {MdOutlineDriveFolderUpload} from "react-icons/md";
 
 const menuItems = [
-    { path: '/gioi-thieu', label: 'Giới thiệu', icon: FiHome, color:'text-black' },
-    { path: '/tai-ma-tran', label: 'Tải ma trận', icon: MdOutlineDriveFolderUpload , color:'text-black'},
-    { path: '/nhap-du-lieu', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
-    { path: '/tinh-diem', label: 'Tính điểm các phương án', icon: FiBarChart2, color:'text-black' },
+    { path: '/landing', label: 'Giới thiệu', icon: FiHome, color:'text-black' },
+    { path: '/upload-matrices', label: 'Tải ma trận', icon: MdOutlineDriveFolderUpload , color:'text-black'},
+    { path: '/input', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
+    { path: '/process', label: 'Tính điểm các phương án', icon: FiBarChart2, color:'text-black' },
 ];
 
 export default function Sidebar() {
