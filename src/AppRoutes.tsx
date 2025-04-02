@@ -1,12 +1,12 @@
-import { RouteObject } from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Layouts from './layouts/Layouts.tsx';
 
-export const AppRoutes: RouteObject[] = [
-  {
-    path: "/",
-    element: <h1>Home Page</h1>, 
-  },
-  {
-    path: "/about",
-    element: <h1>About Page</h1>,
-  },
-];
+
+const AppRoutes =[
+    {
+        path: "/",
+        element: <Layouts />,
+    },
+]
+
+export default AppRoutes;

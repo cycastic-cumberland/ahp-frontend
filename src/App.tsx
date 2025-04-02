@@ -1,6 +1,8 @@
+// noinspection TypeScriptValidateTypes
+
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppRoutes } from "./AppRoutes";
+import AppRoutes from "./AppRoutes";
 
 const App = () => {
   return (
