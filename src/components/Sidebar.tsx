@@ -14,7 +14,7 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     return (
-        <div className="w-72 fixed min-h-screen bg-gray-100 text-white  p-4 rounded-lg m-3">
+        <div className="w-72 fixed min-h-screen bg-white text-white p-4 rounded-lg m-3">
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-center text-black">Nhóm 4 - HTTRQĐ</h1>
             </div>
@@ -28,20 +28,29 @@ export default function Sidebar() {
                                     to={item.path}
                                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                                         location.pathname === item.path
-                                            ? 'bg-gray-300 text-white'
-                                            : 'hover:bg-gray-300 text-gray-300 hover:text-black'
-                                    }`}
+                                            ? 'bg-gray-300 text-black font-bold'
+                                            : ' text-black hover:font-bold'
+                                    } group`}
                                     onClick={() => navigate(item.path.slice(1))}
                                 >
-                                    <Icon className={`text-xl ${location.pathname === item.path ? 'text-black' : item.color}`} />
-                                    <span className="font-medium text-black">{item.label}</span>
+                                    <Icon className={`text-xl ${
+                                        location.pathname === item.path
+                                            ? 'text-black'
+                                            : `${item.color} group-hover:font-bold`
+                                    } transition-all duration-200`} />
+                                    <span className={`${
+                                        location.pathname === item.path
+                                            ? 'text-black font-bold'
+                                            : 'text-black group-hover:font-bold'
+                                    } transition-all duration-200`}>
+                                        {item.label}
+                                    </span>
                                 </Link>
                             </li>
                         );
                     })}
                 </ul>
             </nav>
-
         </div>
     );
 }
