@@ -98,22 +98,22 @@ export default function Landing() {
                 <div className='flex justify-center space-x-4 space-x-reverse gap-16'>
                     <div className='flex flex-col justify-center items-center'>
                         <div><img src='/frog.svg'/></div>
-                        <div>Nguyễn Thanh Hà</div>
+                        <div className="font-bold">Nguyễn Thanh Hà</div>
                         <div>1050080048</div>
                     </div>
                     <div className='flex flex-col justify-center items-center'>
                         <div><img src='/cow.svg'/></div>
-                        <div>Đào Ngọc Hòa</div>
+                        <div className="font-bold">Đào Ngọc Hòa</div>
                         <div>1050080050</div>
                     </div>
                     <div className='flex flex-col justify-center items-center'>
                         <div><img src='/koala.svg'/></div>
-                        <div>Nguyễn Khánh Nam</div>
+                        <div className="font-bold">Nguyễn Khánh Nam</div>
                         <div>1050080065</div>
                     </div>
                     <div className='flex flex-col justify-center items-center'>
                         <div><img src='/hamster.svg'/></div>
-                        <div>Lưu Thy THy</div>
+                        <div className="font-bold">Lưu Thy THy</div>
                         <div>1050080078</div>
                     </div>
                 </div>
