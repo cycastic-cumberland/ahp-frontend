@@ -1,12 +1,24 @@
-import { RouteObject } from "react-router-dom";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Layouts from './layouts/Layouts.tsx';
+import Landing from "./pages/landing.tsx";
+import CalculationMatrix from './pages/calculationMatrix.tsx';
 
-export const AppRoutes: RouteObject[] = [
-  {
-    path: "/",
-    element: <h1>Home Page</h1>, 
-  },
-  {
-    path: "/about",
-    element: <h1>About Page</h1>,
-  },
-];
+
+const AppRoutes =[
+    {
+        path: "/",
+        element: <Layouts />,
+        children: [
+            {
+                path: "/landing",
+                element: <Landing/>
+            },
+            {
+                path: "/calculationMatrix",
+                element: <CalculationMatrix/>
+            },
+        ]
+    },
+]
+
+export default AppRoutes;
