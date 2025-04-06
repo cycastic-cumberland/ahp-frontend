@@ -11,7 +11,7 @@ const AppRoutes =[
         element: <Layouts />,
         children: [
             {
-                path: "/landing",
+                path: "/",
                 element: <Landing/>
             },
             {
