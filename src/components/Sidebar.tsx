@@ -14,7 +14,7 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     return (
-        <div className="w-72 fixed min-h-screen bg-white text-white p-4 rounded-lg m-3">
+        <div className="my-5 mx-1">
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-center text-black">Nhóm 4 - HTTRQĐ</h1>
             </div>
