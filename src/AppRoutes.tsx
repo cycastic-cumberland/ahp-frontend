@@ -1,11 +1,10 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Layouts from './layouts/Layouts.tsx';
+import LandingPage from "./components/LandingPage.tsx";
 
 
 const AppRoutes =[
     {
         path: "/",
-        element: <Layouts />,
+        element: <LandingPage />,
     },
 ]
 
