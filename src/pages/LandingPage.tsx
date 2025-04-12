@@ -1,6 +1,6 @@
 import { TbPointFilled } from "react-icons/tb";
 
-export default function Landing() {
+export default function LandingPage() {
     return (
         <div className="m-3 ml-5">
             <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">

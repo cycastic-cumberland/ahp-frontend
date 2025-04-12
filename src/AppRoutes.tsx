@@ -1,5 +1,5 @@
-import LandingPage from "./components/LandingPage.tsx";
-import CalculationMatrix from './pages/calculationMatrix.tsx';
+import LandingPage from "./pages/LandingPage.tsx";
+import CalculationMatrix from './pages/CalculationMatrix.tsx';
 
 
 const AppRoutes =[
