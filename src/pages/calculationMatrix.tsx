@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const CustomButton = styled(Button)({
   backgroundColor: 'black', // Màu nền đen
@@ -45,29 +45,109 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 // createData1 và createData2 dành cho tiêu chí
-function createData1(
-  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+// function createData1(
+//   name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+//   criteria1: number,
+//   criteria2: number,
+//   criteria3: number,
+//   criteria4: number,
+//   criteria5: number,
+//   sum: number,
+// ) {
+//   return { name, criteria1, criteria2, criteria3, criteria4, criteria5, sum };
+// }
+
+
+// const rows1 = [
+//   createData1('Tiêu chí 1', 0, 0, 0, 0, 0, 0),
+//   createData1('Tiêu chí 2', 0, 0, 0, 0, 0, 0),
+//   createData1('Tiêu chí 3', 0, 0, 0, 0, 0, 0),
+//   createData1('Tiêu chí 4', 0, 0, 0, 0, 0, 0),
+//   createData1('Tiêu chí 5', 0, 0, 0, 0, 0, 0),
+//   createData1('Sum', 0, 0, 0, 0, 0, 0),
+// ];
+
+// function createData2(
+//   name: string,
+//   criteria1: number,
+//   criteria2: number,
+//   criteria3: number,
+//   criteria4: number,
+//   criteria5: number,
+//   weightedSumValue: number,
+//   criteriaWeight: number,
+//   consistencyVector: number,
+// ) {
+//   return { name, criteria1, criteria2, criteria3, criteria4, criteria5, weightedSumValue, criteriaWeight, consistencyVector };
+// }
+
+
+// const rows2 = [
+//   createData2('Tiêu chí 1', 0, 0, 0, 0, 0, 0, 0, 0),
+//   createData2('Tiêu chí 2', 0, 0, 0, 0, 0, 0, 0, 0),
+//   createData2('Tiêu chí 3', 0, 0, 0, 0, 0, 0, 0, 0),
+//   createData2('Tiêu chí 4', 0, 0, 0, 0, 0, 0, 0, 0),
+//   createData2('Tiêu chí 5', 0, 0, 0, 0, 0, 0, 0, 0),
+// ];
+
+
+// // plan1 và plan2 dành cho phương án
+// function plan1(
+//   name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+//   plan1: number,
+//   plan2: number,
+//   plan3: number,
+//   plan4: number,
+//   plan5: number,
+//   sum: number,
+// ) {
+//   return { name, plan1, plan2, plan3, plan4, plan5, sum };
+// }
+
+
+// const rows3 = [
+//   plan1('Phương án 1', 0, 0, 0, 0, 0, 0),
+//   plan1('Phương án 2', 0, 0, 0, 0, 0, 0),
+//   plan1('Phương án 3', 0, 0, 0, 0, 0, 0),
+//   plan1('Phương án 4', 0, 0, 0, 0, 0, 0),
+//   plan1('Phương án 5', 0, 0, 0, 0, 0, 0),
+//   plan1('Sum', 0, 0, 0, 0, 0, 0),
+// ];
+
+// function plan2(
+//   name: string,
+//   plan1: number,
+//   plan2: number,
+//   plan3: number,
+//   plan4: number,
+//   plan5: number,
+//   weightedSumValue: number,
+//   criteriaWeight: number,
+//   consistencyVector: number,
+// ) {
+//   return { name, plan1, plan2, plan3, plan4, plan5, weightedSumValue, criteriaWeight, consistencyVector };
+// }
+
+
+// const rows4 = [
+//   plan2('Phương án 1', 0, 0, 0, 0, 0, 0, 0, 0),
+//   plan2('Phương án 2', 0, 0, 0, 0, 0, 0, 0, 0),
+//   plan2('Phương án 3', 0, 0, 0, 0, 0, 0, 0, 0),
+//   plan2('Phương án 4', 0, 0, 0, 0, 0, 0, 0, 0),
+//   plan2('Phương án 5', 0, 0, 0, 0, 0, 0, 0, 0),
+// ];
+
+type Data1 = {
+  name: string,
   criteria1: number,
   criteria2: number,
   criteria3: number,
   criteria4: number,
   criteria5: number,
   sum: number,
-) {
-  return { name, criteria1, criteria2, criteria3, criteria4, criteria5, sum };
-}
+};
 
-
-const rows1 = [
-  createData1('Tiêu chí 1', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 2', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 3', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 4', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 5', 0, 0, 0, 0, 0, 0),
-  createData1('Sum', 0, 0, 0, 0, 0, 0),
-];
-
-function createData2(
+type Data2 = {
   name: string,
   criteria1: number,
   criteria2: number,
@@ -77,44 +157,19 @@ function createData2(
   weightedSumValue: number,
   criteriaWeight: number,
   consistencyVector: number,
-) {
-  return { name, criteria1, criteria2, criteria3, criteria4, criteria5, weightedSumValue, criteriaWeight, consistencyVector };
-}
+};
 
-
-const rows2 = [
-  createData2('Tiêu chí 1', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 2', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 3', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 4', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 5', 0, 0, 0, 0, 0, 0, 0, 0),
-];
-
-
-// plan1 và plan2 dành cho phương án
-function plan1(
-  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+type Plan1 = {
+  name: string,
   plan1: number,
   plan2: number,
   plan3: number,
   plan4: number,
   plan5: number,
   sum: number,
-) {
-  return { name, plan1, plan2, plan3, plan4, plan5, sum };
-}
+};
 
-
-const rows3 = [
-  plan1('Phương án 1', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 2', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 3', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 4', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 5', 0, 0, 0, 0, 0, 0),
-  plan1('Sum', 0, 0, 0, 0, 0, 0),
-];
-
-function plan2(
+type Plan2 = {
   name: string,
   plan1: number,
   plan2: number,
@@ -124,24 +179,46 @@ function plan2(
   weightedSumValue: number,
   criteriaWeight: number,
   consistencyVector: number,
-) {
-  return { name, plan1, plan2, plan3, plan4, plan5, weightedSumValue, criteriaWeight, consistencyVector };
-}
+};
 
-
-const rows4 = [
-  plan2('Phương án 1', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 2', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 3', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 4', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 5', 0, 0, 0, 0, 0, 0, 0, 0),
-];
-
+type DataPayload = {
+  rows1: Data1[],
+  rows2: Data2[],
+  rows3: Plan1[],
+  rows4: Plan2[],
+  cr?: number,
+};
 
 function CalculationMatrix() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [CR, setCR] = useState(0.05); // thử nghiệm: cho CR > 10% (=0.01) thì sẽ ko hiển thị các bảng Ma trận tiêu chí
+
+  const payload = searchParams.get("data");
+
+  if (!payload) {
+    // TODO: Add snackbar or something
+    // throw { "error": "payload must not be empty" }
+    return (
+      <div className="m-3 ml-5">
+        <div className="min-h-screen bg-white rounded-lg shadow-lg p-6 flex flex-col">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">Tính toán ma trận</h1>
+          <div className="text-red-500 font-bold">
+            Dữ liệu không hợp lệ. Vui lòng quay lại và nhập thông tin!
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { rows1, rows2, rows3, rows4, cr } = JSON.parse(payload) as DataPayload
+
+  useEffect(() => {
+    if (cr) {
+      setCR(cr)
+    }
+  }, []);
 
   const [criteriaList, setCriteriaList] = useState([
     'Chi phí đầu tư',
