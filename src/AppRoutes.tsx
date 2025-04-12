@@ -1,12 +1,11 @@
-import { RouteObject } from "react-router-dom";
+import LandingPage from "./components/LandingPage.tsx";
 
-export const AppRoutes: RouteObject[] = [
-  {
-    path: "/",
-    element: <h1>Home Page</h1>, 
-  },
-  {
-    path: "/about",
-    element: <h1>About Page</h1>,
-  },
-];
+
+const AppRoutes =[
+    {
+        path: "/",
+        element: <LandingPage />,
+    },
+]
+
+export default AppRoutes;

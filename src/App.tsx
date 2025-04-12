@@ -1,6 +1,9 @@
+// noinspection TypeScriptValidateTypes
+
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppRoutes } from "./AppRoutes";
+import AppRoutes from "./AppRoutes";
+import MainLayout from "./layouts/MainLayout.tsx";
 
 const App = () => {
   return (
@@ -10,7 +13,7 @@ const App = () => {
           <Route
             key={route.path || index}
             path={route.path}
-            element={route.element}
+            element={<MainLayout>{route.element}</MainLayout>}
           />
         ))}
       </Routes>
