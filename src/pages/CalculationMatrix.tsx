@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/pages/calculationMatrix.tsx
 import React, { useEffect, useState } from 'react'
+=======
+import React, {useEffect, useState} from 'react'
+>>>>>>> 17849d71a9a5df42b29a7c3b9da3defae06fce46:src/pages/CalculationMatrix.tsx
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,7 +12,63 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
+<<<<<<< HEAD:src/pages/calculationMatrix.tsx
 import { useNavigate, useSearchParams } from 'react-router-dom';
+=======
+import {useNavigate, useSearchParams} from 'react-router-dom';
+
+type Data1 = {
+  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+  criteria1: number,
+  criteria2: number,
+  criteria3: number,
+  criteria4: number,
+  criteria5: number,
+  sum: number,
+}
+
+type Data2 = {
+  name: string,
+  criteria1: number,
+  criteria2: number,
+  criteria3: number,
+  criteria4: number,
+  criteria5: number,
+  weightedSumValue: number,
+  criteriaWeight: number,
+  consistencyVector: number,
+}
+
+type Plan1 = {
+  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
+  plan1: number,
+  plan2: number,
+  plan3: number,
+  plan4: number,
+  plan5: number,
+  sum: number,
+}
+
+type Plan2 = {
+  name: string,
+  plan1: number,
+  plan2: number,
+  plan3: number,
+  plan4: number,
+  plan5: number,
+  weightedSumValue: number,
+  criteriaWeight: number,
+  consistencyVector: number,
+}
+
+type DataPayload = {
+  rows1: Data1,
+  rows2: Data2,
+  rows3: Plan1,
+  rows4: Plan2,
+  cr?: number,
+}
+>>>>>>> 17849d71a9a5df42b29a7c3b9da3defae06fce46:src/pages/CalculationMatrix.tsx
 
 const CustomButton = styled(Button)({
   backgroundColor: 'black', // Màu nền đen
@@ -43,6 +103,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+<<<<<<< HEAD:src/pages/calculationMatrix.tsx
 
 // createData1 và createData2 dành cho tiêu chí
 // function createData1(
@@ -193,7 +254,25 @@ function CalculationMatrix() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+=======
+function CalculationMatrix() {
+  const navigate = useNavigate();
+>>>>>>> 17849d71a9a5df42b29a7c3b9da3defae06fce46:src/pages/CalculationMatrix.tsx
   const [CR, setCR] = useState(0.05); // thử nghiệm: cho CR > 10% (=0.01) thì sẽ ko hiển thị các bảng Ma trận tiêu chí
+  const [searchParams] = useSearchParams();
+  const payload = searchParams.get("data");
+  if (!payload){
+    // TODO: Add snackbar or something
+    throw { "error": "payload must not be empty" }
+  }
+  const { rows1, rows2, rows3, rows4, cr } = JSON.parse(payload) as DataPayload
+
+  useEffect(() => {
+    if (cr){
+      setCR(cr)
+    }
+  }, []);
+
 
   const payload = searchParams.get("data");
 
