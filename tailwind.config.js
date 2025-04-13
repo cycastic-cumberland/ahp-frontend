@@ -8,10 +8,6 @@ export default {
     fontFamily: {
       inter: ['Inter', 'sans-serif'],
     },
-    fontSize: {
-      '16px': '16px', 
-      '20px':'20px',
-    },
   },
   plugins: [],
 }
