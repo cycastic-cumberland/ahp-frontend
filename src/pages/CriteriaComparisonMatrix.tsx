@@ -119,9 +119,8 @@ const CriteriaComparisonMatrix: React.FC = () => {
       
   return (
     <div>
-        <h1 className="text-20px font-bold text-gray-800 mb-12 flex justify-center">
-            Tạo ma trận so sánh cặp các tiêu chí
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">Tính toán ma trận</h1>
+
 
         <div className="mb-16 flex justify-center">
             <div className="w-2/4">

@@ -15,7 +15,7 @@ export default function Sidebar() {
     return (
         <div className="my-5 mx-5">
             <div className="mb-8">
-                <h1 className="text-xl font-bold text-center text-black">Nhóm 4 - HTTRQĐ</h1>
+                <h1 className="text-xl font-bold text-center text-black">Lựa chọn đầu tư năng lượng tái tạo</h1>
             </div>
             <nav className="mb-8">
                 <ul className="space-y-3">
