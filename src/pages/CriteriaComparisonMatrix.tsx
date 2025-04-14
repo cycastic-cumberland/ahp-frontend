@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
-import MatrixTable from '../components/MatrixTable';
-import { calculateAHP } from '../api/AhpAPI';
+import MatrixTable from '../components/MatrixTable.tsx';
+import { calculateAHP } from '../api/AhpApi.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const CriteriaComparisonMatrix: React.FC = () => {
