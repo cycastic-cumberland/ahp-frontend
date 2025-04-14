@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
-import MatrixTable from '../components/matrixTable';
+import MatrixTable from '../components/MatrixTable';
 
 const CriteriaComparisonMatrix: React.FC = () => {
     const [showEvaluation, setShowEvaluation] = useState(false);
