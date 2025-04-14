@@ -1,18 +1,18 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout.tsx';
-import Landing from "./pages/LandingPage.tsx";
 import CalculationMatrix from './pages/CalculationMatrix.tsx';
 import CriteriaComparisonMatrix from './pages/CriteriaComparisonMatrix.tsx';
+import LandingPage from './components/LandingPage.tsx';
 
 
 const AppRoutes =[
     {
         path: "/",
-        element: <MainLayout />,
+        element: <MainLayout/>,
         children: [
             {
                 path: "/",
-                element: <Landing/>
+                element: <LandingPage/>
             },
             {
                 path: "/calculationMatrix",

@@ -156,8 +156,7 @@ function CalculationMatrix() {
   };
 
   return (
-    <div className="m-3 ml-5">
-      <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+    <div>
         <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">Tính toán ma trận</h1>
 
         <div className='space-y-5'>
@@ -352,7 +351,6 @@ function CalculationMatrix() {
           </div>
         )}
       </div>
-    </div>
   )
 }
 
