@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
-import MatrixTable from '../components/matrixTable';
-import { calculateAHP } from '../api/ahpApi';
+import MatrixTable from '../components/MatrixTable';
+import { calculateAHP } from '../api/AhpAPI';
 import { useNavigate } from 'react-router-dom';
 
 const CriteriaComparisonMatrix: React.FC = () => {
     const [showEvaluation, setShowEvaluation] = useState(false);
 
+    // handleEvaluateClick for button
     const handleEvaluateClick = () => {
         setShowEvaluation(true);
     };
