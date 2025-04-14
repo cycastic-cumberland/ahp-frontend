@@ -1,12 +1,11 @@
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {FiBarChart2, FiEdit, FiHome} from "react-icons/fi";
+import {FiBarChart2, FiEdit, FiHome, FiUpload} from "react-icons/fi";
 import {MdOutlineDriveFolderUpload} from "react-icons/md";
 
 const menuItems = [
     { path: '/', label: 'Giới thiệu', icon: FiHome, color:'text-black' },
-    { path: '/upload-matrices', label: 'Tải ma trận', icon: MdOutlineDriveFolderUpload , color:'text-black'},
-    { path: '/input', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
-    { path: '/process', label: 'Tính điểm các phương án', icon: FiBarChart2, color:'text-black' },
+    { path: '/criteriaComparisonMatrix', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
+    { path: '/calculationMatrix', label: 'Tính điểm các phương án', icon: FiBarChart2, color:'text-black' },
 ];
 
 export default function Sidebar() {
@@ -14,9 +13,9 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     return (
-        <div className="w-72 fixed min-h-screen bg-white text-white p-4 rounded-lg m-3">
+        <div className="my-5 mx-5">
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-center text-black">Nhóm 4 - HTTRQĐ</h1>
+                <h1 className="text-xl font-bold text-center text-black">Nhóm 4 - HTTRQĐ</h1>
             </div>
             <nav className="mb-8">
                 <ul className="space-y-3">
