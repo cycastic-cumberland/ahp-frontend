@@ -259,7 +259,12 @@ const CriteriaComparisonMatrix: React.FC = () => {
                         Thực hiện tính toán
                     </button>
                 </div>
-
+                {/* {ahpResult && (
+                <div className="mt-8">
+                    <h2 className="text-lg font-semibold mb-4">Kết quả AHP:</h2>
+                    <pre className="bg-gray-100 p-4 rounded">{JSON.stringify(ahpResult, null, 2)}</pre>
+                </div>
+                )} */}
             </div>
         )}
     </div>
