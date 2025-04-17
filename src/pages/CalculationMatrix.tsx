@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,7 +8,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const CustomButton = styled(Button)({
   backgroundColor: 'black', // Màu nền đen
@@ -25,333 +27,379 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
     fontWeight: 'bold',
-    fontSize: 12, // Thêm phần này cho font size trong tiêu đề
+    fontSize: 12, // Font size cho tiêu đề
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 12, // Font size cho phần body
+    fontSize: 12, // Font size cho body
   },
 }));
-
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
+  // Ẩn đường viền cuối
   '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
 
+// Các kiểu dữ liệu
+type Matrix = {
+  column_headers: string[];
+  row_headers: string[];
+  data: number[][];
+};
 
-// createData1 và createData2 dành cho tiêu chí
-function createData1(
-  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
-  criteria1: number,
-  criteria2: number,
-  criteria3: number,
-  criteria4: number,
-  criteria5: number,
-  sum: number,
-) {
-  return { name, criteria1, criteria2, criteria3, criteria4, criteria5, sum };
-}
+type CriteriaMatrices = {
+  average: Matrix;
+  completed: Matrix;
+  lambda_max: number;
+  ci: number;
+  ri: number;
+  cr: number;
+};
 
+type SelectionResult = {
+  average: Matrix;
+  completed: Matrix;
+  lambda_max: number;
+  ci: number;
+  ri: number;
+  cr: number;
+};
 
-const rows1 = [
-  createData1('Tiêu chí 1', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 2', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 3', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 4', 0, 0, 0, 0, 0, 0),
-  createData1('Tiêu chí 5', 0, 0, 0, 0, 0, 0),
-  createData1('Sum', 0, 0, 0, 0, 0, 0),
-];
+type Selection = {
+  name: string;
+  result: SelectionResult;
+};
 
-function createData2(
-  name: string,
-  criteria1: number,
-  criteria2: number,
-  criteria3: number,
-  criteria4: number,
-  criteria5: number,
-  weightedSumValue: number,
-  criteriaWeight: number,
-  consistencyVector: number,
-) {
-  return { name, criteria1, criteria2, criteria3, criteria4, criteria5, weightedSumValue, criteriaWeight, consistencyVector };
-}
+type Scoreboard = {
+  rating_table: Matrix;
+  criteria_weight_table: Matrix;
+  composited: Matrix;
+  highest_score: string;
+};
 
-
-const rows2 = [
-  createData2('Tiêu chí 1', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 2', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 3', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 4', 0, 0, 0, 0, 0, 0, 0, 0),
-  createData2('Tiêu chí 5', 0, 0, 0, 0, 0, 0, 0, 0),
-];
-
-
-// plan1 và plan2 dành cho phương án
-function plan1(
-  name: string, // Tên hàng (Tiêu chí 1, Tiêu chí 2,...)
-  plan1: number,
-  plan2: number,
-  plan3: number,
-  plan4: number,
-  plan5: number,
-  sum: number,
-) {
-  return { name, plan1, plan2, plan3, plan4, plan5, sum };
-}
-
-
-const rows3 = [
-  plan1('Phương án 1', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 2', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 3', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 4', 0, 0, 0, 0, 0, 0),
-  plan1('Phương án 5', 0, 0, 0, 0, 0, 0),
-  plan1('Sum', 0, 0, 0, 0, 0, 0),
-];
-
-function plan2(
-  name: string,
-  plan1: number,
-  plan2: number,
-  plan3: number,
-  plan4: number,
-  plan5: number,
-  weightedSumValue: number,
-  criteriaWeight: number,
-  consistencyVector: number,
-) {
-  return { name, plan1, plan2, plan3, plan4, plan5, weightedSumValue, criteriaWeight, consistencyVector };
-}
-
-
-const rows4 = [
-  plan2('Phương án 1', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 2', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 3', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 4', 0, 0, 0, 0, 0, 0, 0, 0),
-  plan2('Phương án 5', 0, 0, 0, 0, 0, 0, 0, 0),
-];
-
+type DataPayload = {
+  criteria: CriteriaMatrices;
+  selections: Selection[];
+  scoreboard: Scoreboard;
+};
 
 function CalculationMatrix() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [CR, setCR] = useState(0.05); // thử nghiệm: cho CR > 10% (=0.01) thì sẽ ko hiển thị các bảng Ma trận tiêu chí
+  const encodedData = searchParams.get("data");
+  const decodedData = encodedData ? JSON.parse(decodeURIComponent(encodedData)) : null;
 
-  const [criteriaList, setCriteriaList] = useState([
-    'Chi phí đầu tư',
-    'Tiêu thụ năng lượng',
-    'Xuất khẩu năng lượng',
-    'Công suất lắp đặt',
-    'Lượng phát thải CO2'
-  ]);
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  useEffect(() => {
+    if (!decodedData) {
+      setErrorMessage('Không thể giải mã dữ liệu. Vui lòng thử lại!');
+      setOpenErrorSnackbar(true);
+      const timer = setTimeout(() => navigate('/'), 5000); // Redirect sau 5 giây
+      return () => clearTimeout(timer);
+    }
+  }, [decodedData, navigate]);
+
+  if (!decodedData) {
+    return (
+        <Snackbar
+            open={openErrorSnackbar}
+            autoHideDuration={3000}
+            onClose={() => setOpenErrorSnackbar(false)}
+        >
+          <MuiAlert severity="error" elevation={6} variant="filled">
+            Dữ liệu không hợp lệ! Hãy nhập lại dữ liệu hoặc thử lại sau.
+          </MuiAlert>
+        </Snackbar>
+    );
+  }
+
+  // Lấy dữ liệu từ payload đã decode
+  const { criteria, selections, scoreboard } = decodedData as DataPayload;
+  // Các chỉ số toàn cục của criteria
+  const { lambda_max, ci, cr } = criteria;
 
   const handleGoBack = () => {
     navigate('/');
   };
 
+  // Hàm render cho 1 ma trận (dạng số)
+  const renderMatrix = (matrixData: number[][]) => {
+    return matrixData.map((row: number[], rowIndex: number) => (
+        <StyledTableRow key={rowIndex}>
+          <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
+            {criteria.average.row_headers ? criteria.average.row_headers[rowIndex] || (rowIndex + 1) : rowIndex + 1}
+          </StyledTableCell>
+          {row.map((cell: number, cellIndex: number) => (
+              <StyledTableCell key={cellIndex} align="right">
+                {cell.toFixed(2)}
+              </StyledTableCell>
+          ))}
+        </StyledTableRow>
+    ));
+  };
+
   return (
-    <div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">Tính toán ma trận</h1>
+      <div className="m-3 ml-5">
+        <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">
+            Tính toán ma trận
+          </h1>
 
-        <div className='space-y-5'>
-          {/* Chuẩn hóa ma trận bằng cách lấy giá trị mỗi ô chia cho tổng theo cột */}
-          <div>
-            <p className='font-bold mb-5'>Chuẩn hóa ma trận bằng cách lấy giá trị mỗi ô chia cho tổng theo cột</p>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 500 }} aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell></StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 1</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 2</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 3</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 4</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 5</StyledTableCell>
-                    <StyledTableCell align="right">Average</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows1.map((row) => (
-                    <StyledTableRow key={row.name}>
-                      <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
-                        {row.name}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria1}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria2}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria3}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria4}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria5}</StyledTableCell>
-                      <StyledTableCell align="right">{row.sum}</StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-
-          {/* Ma trận hoàn chỉnh */}
-          <div>
-            <p className='font-bold mb-5'>Ma trận hoàn chỉnh</p>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 500 }} aria-label="customized table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell></StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 1</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 2</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 3</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 4</StyledTableCell>
-                    <StyledTableCell align="right">Tiêu chí 5</StyledTableCell>
-                    <StyledTableCell align="right">Weighted Sum Value</StyledTableCell>
-                    <StyledTableCell align="right">Criteria Weight</StyledTableCell>
-                    <StyledTableCell align="right">Consistency Vector</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows2.map((row) => (
-                    <StyledTableRow key={row.name}>
-                      <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
-                        {row.name}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria1}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria2}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria3}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria4}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteria5}</StyledTableCell>
-                      <StyledTableCell align="right">{row.weightedSumValue}</StyledTableCell>
-                      <StyledTableCell align="right">{row.criteriaWeight}</StyledTableCell>
-                      <StyledTableCell align="right">{row.consistencyVector}</StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-
-          {/* Lamda, CR, CR  */}
-          <div className='ml-16'>
-            <p className='font-bold'>Lamda max =</p>
-            <p className='font-bold'>CI =</p>
-            <p className='font-bold'>CR =</p>
-
-            {/* Nút Yêu cầu nhập lại */}
-            <div className='mt-6'>
-              <CustomButton variant="contained">
-                Yêu cầu nhập lại
-              </CustomButton>
+          <div className="space-y-5">
+            {/* 1. Bảng Average của tiêu chí (phần tổng hợp) */}
+            <div>
+              <p className="font-bold mb-5">
+                [Tiêu chí] Chuẩn hóa ma trận (Average)
+              </p>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 600 }} aria-label="criteria average table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell></StyledTableCell>
+                      {criteria.average.column_headers.map((header, index) => (
+                          <StyledTableCell key={index} align="right">
+                            {header}
+                          </StyledTableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {criteria.average.data && renderMatrix(criteria.average.data)}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
+
+            {/* 2. Bảng Completed của tiêu chí (phần tổng hợp) */}
+            <div>
+              <p className="font-bold mb-5">[Tiêu chí] Ma trận hoàn chỉnh</p>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 600 }} aria-label="criteria completed table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell></StyledTableCell>
+                      {criteria.completed.column_headers.map((header, index) => (
+                          <StyledTableCell key={index} align="right">
+                            {header}
+                          </StyledTableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {criteria.completed.data && renderMatrix(criteria.completed.data)}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+
+            {/* Hiển thị các chỉ số tổng hợp của criteria */}
+            <div className="ml-16">
+              <p className="font-bold">Lambda max = {lambda_max}</p>
+              <p className="font-bold">CI = {ci}</p>
+              <p className="font-bold">CR = {cr}</p>
+              <div className="mt-6">
+                <CustomButton variant="contained" onClick={handleGoBack}>
+                  Yêu cầu nhập lại
+                </CustomButton>
+              </div>
+            </div>
+
+            {/* 3. Render các bảng của từng tiêu chí trong selections */}
+            {criteria.ci < 0.1 && (
+                <>
+                  {selections.map((selection, index) => (
+                      <div key={index} className="mt-10">
+                        <h1 className="text-xl font-bold text-gray-800 mb-6 flex justify-center">
+                          Ma trận: {selection.name}
+                        </h1>
+                        {/* Bảng Average cho tiêu chí cụ thể */}
+                        <div>
+                          <p className="font-bold mb-5">
+                            [{selection.name}] Chuẩn hóa ma trận (Average)
+                          </p>
+                          <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 600 }} aria-label={`${selection.name} average`}>
+                              <TableHead>
+                                <TableRow>
+                                  <StyledTableCell></StyledTableCell>
+                                  {selection.result.average.column_headers.map((header, idx) => (
+                                      <StyledTableCell key={idx} align="right">
+                                        {header}
+                                      </StyledTableCell>
+                                  ))}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {selection.result.average.data && renderMatrix(selection.result.average.data)}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                        {/* Bảng Completed cho tiêu chí cụ thể */}
+                        <div>
+                          <p className="font-bold mb-5">
+                            [{selection.name}] Ma trận hoàn chỉnh
+                          </p>
+                          <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 600 }} aria-label={`${selection.name} completed`}>
+                              <TableHead>
+                                <TableRow>
+                                  <StyledTableCell></StyledTableCell>
+                                  {selection.result.completed.column_headers.map((header, idx) => (
+                                      <StyledTableCell key={idx} align="right">
+                                        {header}
+                                      </StyledTableCell>
+                                  ))}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {selection.result.completed.data && renderMatrix(selection.result.completed.data)}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                        {/* Các chỉ số riêng của tiêu chí */}
+                        <div className="ml-16">
+                          <p className="font-bold">
+                            Lambda max = {selection.result.lambda_max}
+                          </p>
+                          <p className="font-bold">CI = {selection.result.ci}</p>
+                          <p className="font-bold">CR = {selection.result.cr}</p>
+                        </div>
+                      </div>
+                  ))}
+                </>
+            )}
+
+            {/* 6. Bảng Rating Table */}
+            {criteria.cr < 0.1 && (
+                <>
+                  <div className="mt-10">
+                    <h1 className="text-xl font-bold mb-6">Rating Table</h1>
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 600 }} aria-label="rating table">
+                        <TableHead>
+                          <TableRow>
+                            {scoreboard.rating_table.column_headers.map((header, idx) => (
+                                <StyledTableCell key={idx} align="right">
+                                  {header}
+                                </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {scoreboard.rating_table.data.map((row: number[], rowIndex: number) => (
+                              <StyledTableRow key={rowIndex}>
+                                <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
+                                  {scoreboard.rating_table.row_headers[rowIndex] || rowIndex + 1}
+                                </StyledTableCell>
+                                {row.map((cell: number, cellIndex: number) => (
+                                    <StyledTableCell key={cellIndex} align="right">
+                                      {cell.toFixed(2)}
+                                    </StyledTableCell>
+                                ))}
+                              </StyledTableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </>
+            )}
+
+            {/* 4. Bảng Criteria Weight Table */}
+            {criteria.cr < 0.1 && (
+                <>
+                  <div className="mt-10">
+                    <h1 className="text-xl font-bold mb-6">Criteria Weight Table</h1>
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 600 }} aria-label="criteria weight table">
+                        <TableHead>
+                          <TableRow>
+                            {scoreboard.criteria_weight_table.column_headers.map((header, idx) => (
+                                <StyledTableCell key={idx} align="right">
+                                  {header}
+                                </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {scoreboard.criteria_weight_table.data.map((row: number[], rowIndex: number) => (
+                              <StyledTableRow key={rowIndex}>
+                                <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
+                                  {scoreboard.criteria_weight_table.row_headers[rowIndex] || rowIndex + 1}
+                                </StyledTableCell>
+                                {row.map((cell: number, cellIndex: number) => (
+                                    <StyledTableCell key={cellIndex} align="right">
+                                      {cell.toFixed(2)}
+                                    </StyledTableCell>
+                                ))}
+                              </StyledTableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </>
+            )}
+
+            {/* 5. Bảng Composited */}
+            {criteria.cr < 0.1 && (
+                <>
+                  <div className="mt-10">
+                    <h1 className="text-xl font-bold mb-6">Composited Table</h1>
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 600 }} aria-label="composited table">
+                        <TableHead>
+                          <TableRow>
+                            {scoreboard.composited.column_headers.map((header, idx) => (
+                                <StyledTableCell key={idx} align="right">
+                                  {header}
+                                </StyledTableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {scoreboard.composited.data.map((row: number[], rowIndex: number) => (
+                              <StyledTableRow key={rowIndex}>
+                                <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
+                                  {scoreboard.composited.row_headers[rowIndex] || rowIndex + 1}
+                                </StyledTableCell>
+                                {row.map((cell: number, cellIndex: number) => (
+                                    <StyledTableCell key={cellIndex} align="right">
+                                      {cell.toFixed(2)}
+                                    </StyledTableCell>
+                                ))}
+                              </StyledTableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </>
+            )}
+
+            {/* Hiển thị kết quả cuối cùng từ Scoreboard */}
+            {criteria.cr < 0.01 && (
+                <>
+                  <div className="mt-10">
+                    <h1 className="text-xl font-bold text-center">
+                      Phương án có điểm cao nhất: {scoreboard.highest_score}
+                    </h1>
+                  </div>
+                </>
+            )}
           </div>
         </div>
-
-        {/* Ma trận các tiêu chí */}
-        {CR <= 0.1 && (
-          <div>
-            {criteriaList.map((criteria, index) => (
-              <div key={index} className='mt-10'>
-                <h1 className="text-xl font-bold text-gray-800 mb-6 flex justify-center">
-                  Ma trận: {criteria}
-                </h1>
-
-                <div className='space-y-5'>
-                  {/* Chuẩn hóa ma trận bằng cách lấy giá trị mỗi ô chia cho tổng theo cột */}
-                  <div>
-                    <p className='font-bold mb-5'>Chuẩn hóa ma trận bằng cách lấy giá trị mỗi ô chia cho tổng theo cột</p>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 500 }} aria-label="customized table">
-                        <TableHead>
-                          <TableRow>
-                            <StyledTableCell></StyledTableCell>
-                            <StyledTableCell align="right">Phương án 1</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 2</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 3</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 4</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 5</StyledTableCell>
-                            <StyledTableCell align="right">Average</StyledTableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows3.map((row) => (
-                            <StyledTableRow key={row.name}>
-                              <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
-                                {row.name}
-                              </StyledTableCell>
-                              <StyledTableCell align="right">{row.plan1}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan2}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan3}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan4}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan5}</StyledTableCell>
-                              <StyledTableCell align="right">{row.sum}</StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-
-                  {/* Ma trận hoàn chỉnh */}
-                  <div>
-                    <p className='font-bold mb-5'>Ma trận hoàn chỉnh</p>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 500 }} aria-label="customized table">
-                        <TableHead>
-                          <TableRow>
-                            <StyledTableCell></StyledTableCell>
-                            <StyledTableCell align="right">Phương án 1</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 2</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 3</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 4</StyledTableCell>
-                            <StyledTableCell align="right">Phương án 5</StyledTableCell>
-                            <StyledTableCell align="right">Weighted Sum Value</StyledTableCell>
-                            <StyledTableCell align="right">Criteria Weight</StyledTableCell>
-                            <StyledTableCell align="right">Consistency Vector</StyledTableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows4.map((row) => (
-                            <StyledTableRow key={row.name}>
-                              <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
-                                {row.name}
-                              </StyledTableCell>
-                              <StyledTableCell align="right">{row.plan1}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan2}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan3}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan4}</StyledTableCell>
-                              <StyledTableCell align="right">{row.plan5}</StyledTableCell>
-                              <StyledTableCell align="right">{row.weightedSumValue}</StyledTableCell>
-                              <StyledTableCell align="right">{row.criteriaWeight}</StyledTableCell>
-                              <StyledTableCell align="right">{row.consistencyVector}</StyledTableCell>
-                            </StyledTableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-
-                  {/* Lamda, CR, CR  */}
-                  <div className='ml-16'>
-                    <p className='font-bold'>Lamda max =</p>
-                    <p className='font-bold'>CI =</p>
-                    <p className='font-bold'>CR =</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            <div className='mt-6'>
-              <CustomButton onClick={handleGoBack} variant="contained">
-                Quay về
-              </CustomButton>
-            </div>
-          </div>
-        )}
       </div>
-  )
+  );
 }
 
-export default CalculationMatrix
+export default CalculationMatrix;
