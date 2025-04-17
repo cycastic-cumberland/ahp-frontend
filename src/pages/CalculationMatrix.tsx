@@ -129,6 +129,10 @@ function CalculationMatrix() {
     navigate('/');
   };
 
+  const handleMatrixTable = () => {
+    navigate('/criteriaComparisonMatrix');
+  };
+
   // Hàm render cho 1 ma trận (dạng số)
   const renderMatrix = (matrixData: number[][]) => {
     return matrixData.map((row: number[], rowIndex: number) => (
@@ -146,8 +150,8 @@ function CalculationMatrix() {
   };
 
   return (
-      <div className="m-3 ml-5">
-        <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col">
+      <>
+        <div className="max-w-full rounded-lg p-6 flex flex-col">
           <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">
             Tính toán ma trận
           </h1>
@@ -156,7 +160,7 @@ function CalculationMatrix() {
             {/* 1. Bảng Average của tiêu chí (phần tổng hợp) */}
             <div>
               <p className="font-bold mb-5">
-                [Tiêu chí] Chuẩn hóa ma trận (Average)
+                Chuẩn hóa ma trận (Average)
               </p>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 600 }} aria-label="criteria average table">
@@ -179,7 +183,7 @@ function CalculationMatrix() {
 
             {/* 2. Bảng Completed của tiêu chí (phần tổng hợp) */}
             <div>
-              <p className="font-bold mb-5">[Tiêu chí] Ma trận hoàn chỉnh</p>
+              <p className="font-bold mb-5">Ma trận hoàn chỉnh</p>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 600 }} aria-label="criteria completed table">
                   <TableHead>
@@ -201,9 +205,9 @@ function CalculationMatrix() {
 
             {/* Hiển thị các chỉ số tổng hợp của criteria */}
             <div className="ml-16">
-              <p className="font-bold">Lambda max = {lambda_max}</p>
-              <p className="font-bold">CI = {ci}</p>
-              <p className="font-bold">CR = {cr}</p>
+              <p className="font-bold">Lambda max = {lambda_max.toFixed(2)}</p>
+              <p className="font-bold">CI = {ci.toFixed(2)}</p>
+              <p className="font-bold">CR = {cr.toFixed(2)}</p>
               <div className="mt-6">
                 <CustomButton variant="contained" onClick={handleGoBack}>
                   Yêu cầu nhập lại
@@ -222,7 +226,7 @@ function CalculationMatrix() {
                         {/* Bảng Average cho tiêu chí cụ thể */}
                         <div>
                           <p className="font-bold mb-5">
-                            [{selection.name}] Chuẩn hóa ma trận (Average)
+                            Chuẩn hóa ma trận (Average)
                           </p>
                           <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 600 }} aria-label={`${selection.name} average`}>
@@ -243,9 +247,9 @@ function CalculationMatrix() {
                           </TableContainer>
                         </div>
                         {/* Bảng Completed cho tiêu chí cụ thể */}
-                        <div>
+                        <div className="mt-5">
                           <p className="font-bold mb-5">
-                            [{selection.name}] Ma trận hoàn chỉnh
+                            Ma trận hoàn chỉnh
                           </p>
                           <TableContainer component={Paper}>
                             <Table sx={{ minWidth: 600 }} aria-label={`${selection.name} completed`}>
@@ -266,12 +270,12 @@ function CalculationMatrix() {
                           </TableContainer>
                         </div>
                         {/* Các chỉ số riêng của tiêu chí */}
-                        <div className="ml-16">
+                        <div className="ml-16 mt-10">
                           <p className="font-bold">
-                            Lambda max = {selection.result.lambda_max}
+                            Lambda max = {selection.result.lambda_max.toFixed(2)}
                           </p>
-                          <p className="font-bold">CI = {selection.result.ci}</p>
-                          <p className="font-bold">CR = {selection.result.cr}</p>
+                          <p className="font-bold">CI = {selection.result.ci.toFixed(2)}</p>
+                          <p className="font-bold">CR = {selection.result.cr.toFixed(2)}</p>
                         </div>
                       </div>
                   ))}
@@ -282,11 +286,12 @@ function CalculationMatrix() {
             {criteria.cr < 0.1 && (
                 <>
                   <div className="mt-10">
-                    <h1 className="text-xl font-bold mb-6">Rating Table</h1>
+                    <h1 className="text-xl font-bold mb-6">Bảng đánh giá</h1>
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 600 }} aria-label="rating table">
                         <TableHead>
                           <TableRow>
+                            <StyledTableCell></StyledTableCell>
                             {scoreboard.rating_table.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">
                                   {header}
@@ -318,11 +323,12 @@ function CalculationMatrix() {
             {criteria.cr < 0.1 && (
                 <>
                   <div className="mt-10">
-                    <h1 className="text-xl font-bold mb-6">Criteria Weight Table</h1>
+                    <h1 className="text-xl font-bold mb-6">Bảng trọng số tiêu chí</h1>
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 600 }} aria-label="criteria weight table">
                         <TableHead>
                           <TableRow>
+                            <StyledTableCell></StyledTableCell>
                             {scoreboard.criteria_weight_table.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">
                                   {header}
@@ -331,6 +337,7 @@ function CalculationMatrix() {
                           </TableRow>
                         </TableHead>
                         <TableBody>
+
                           {scoreboard.criteria_weight_table.data.map((row: number[], rowIndex: number) => (
                               <StyledTableRow key={rowIndex}>
                                 <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
@@ -354,11 +361,12 @@ function CalculationMatrix() {
             {criteria.cr < 0.1 && (
                 <>
                   <div className="mt-10">
-                    <h1 className="text-xl font-bold mb-6">Composited Table</h1>
+                    <h1 className="text-xl font-bold mb-6">Bảng điểm tổng hợp</h1>
                     <TableContainer component={Paper}>
                       <Table sx={{ minWidth: 600 }} aria-label="composited table">
                         <TableHead>
                           <TableRow>
+                            <StyledTableCell></StyledTableCell>
                             {scoreboard.composited.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">
                                   {header}
@@ -398,7 +406,7 @@ function CalculationMatrix() {
             )}
           </div>
         </div>
-      </div>
+      </>
   );
 }
 
