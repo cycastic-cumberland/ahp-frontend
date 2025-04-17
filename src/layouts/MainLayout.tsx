@@ -8,7 +8,7 @@ export default function MainLayout() {
                 <div className="w-64 bg-white rounded-xl shadow-md overflow-hidden">
                     <Sidebar />
                 </div>
-                <main className="flex-1 bg-white rounded-xl shadow-md overflow-auto p-4">
+                <main className="w-full flex-1 bg-white rounded-xl shadow-md overflow-auto p-4">
                     <Outlet />
                 </main>
             </div>
