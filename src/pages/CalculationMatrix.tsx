@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -104,6 +104,10 @@ function CalculationMatrix() {
       return () => clearTimeout(timer);
     }
   }, [decodedData, navigate]);
+
+  useEffect(() => {
+    console.error(errorMessage)
+  }, [errorMessage]);
 
   if (!decodedData) {
     return (
