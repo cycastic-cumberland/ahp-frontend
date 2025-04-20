@@ -43,28 +43,7 @@ const MatrixTable: React.FC<MatrixTableProps> = ({
   const [validationErrors, setValidationErrors] = useState<boolean[][]>([]);
 
   // Kiểm tra giá trị hợp lệ (1/9 đến 9)
-  const isValidValue = (value: string | number): boolean => {
-    if (value === '') return true;
-    
-    // Các giá trị phân số hợp lệ
-    const validFractions = ['1/9', '1/8', '1/7', '1/6', '1/5', '1/4', '1/3', '1/2'];
-    
-    // Các giá trị số nguyên hợp lệ
-    const validIntegers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    
-    // Kiểm tra phân số
-    if (typeof value === 'string' && validFractions.includes(value)) return true;
-    
-    // Kiểm tra số nguyên
-    const numValue = Number(value);
-    if (!isNaN(numValue)) {
-      return validIntegers.includes(numValue);
-    }
-    
-    return false;
-  };
-
-  // Cập nhật ma trận validation errors
+// Cập nhật ma trận validation errors
   const updateValidationErrors = (matrix: (number | string)[][]) => {
     const newErrors = matrix.map((row) => row.map(() => false));
   let hasErrors = false;
