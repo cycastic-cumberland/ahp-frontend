@@ -1,4 +1,3 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout.tsx';
 import LandingPage from "./pages/LandingPage.tsx";
 import CalculationMatrix from './pages/CalculationMatrix.tsx';

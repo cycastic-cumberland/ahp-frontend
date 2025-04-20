@@ -1,11 +1,9 @@
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {FiBarChart2, FiEdit, FiHome, FiUpload} from "react-icons/fi";
-import {MdOutlineDriveFolderUpload} from "react-icons/md";
+import {FiEdit, FiHome} from "react-icons/fi";
 
 const menuItems = [
     { path: '/', label: 'Giới thiệu', icon: FiHome, color:'text-black' },
     { path: '/criteriaComparisonMatrix', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
-    { path: '/calculationMatrix', label: 'Tính điểm các phương án', icon: FiBarChart2, color:'text-black' },
 ];
 
 export default function Sidebar() {

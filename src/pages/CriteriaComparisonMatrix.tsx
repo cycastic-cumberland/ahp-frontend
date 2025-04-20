@@ -14,7 +14,6 @@ const CriteriaComparisonMatrix: React.FC = () => {
 
     const [matrixData, setMatrixData] = useState<Record<string, number[][]>>({});
 
-    const [ahpResult, setAHPResult] = useState<any>(null);
 
     const comparisonMatrices = [
         {
@@ -97,6 +96,7 @@ const CriteriaComparisonMatrix: React.FC = () => {
           .filter(([key]) => key !== 'matrix1')
           .map(([key, data], index) => ({
             data,
+            key,
             criteria_name: comparisonMatrices[index + 1].title,
           }));
       
@@ -110,8 +110,7 @@ const CriteriaComparisonMatrix: React.FC = () => {
       
         try {
           const result = await calculateAHP(payload);
-          setAHPResult(result); 
-          handleNavigate(result); 
+          handleNavigate(result);
         } catch (err) {
           alert('Có lỗi xảy ra khi tính toán AHP!');
         }
