@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -105,6 +105,10 @@ function CalculationMatrix() {
     }
   }, [decodedData, navigate]);
 
+  useEffect(() => {
+    console.error(errorMessage)
+  }, [errorMessage]);
+
   if (!decodedData) {
     return (
         <Snackbar open={openErrorSnackbar} autoHideDuration={3000} onClose={() => setOpenErrorSnackbar(false)}>
@@ -121,11 +125,6 @@ function CalculationMatrix() {
   const handleGoBack = () => {
     navigate('/');
   };
-
-  const handleMatrixTable = () => {
-    navigate('/criteriaComparisonMatrix');
-  };
-
   const renderMatrix = (matrixData: number[][]) => {
     return matrixData.map((row: number[], rowIndex: number) => (
         <StyledTableRow key={rowIndex}>
