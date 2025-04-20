@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {Button, Chip} from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -105,10 +105,6 @@ function CalculationMatrix() {
     }
   }, [decodedData, navigate]);
 
-  useEffect(() => {
-    console.error(errorMessage)
-  }, [errorMessage]);
-
   if (!decodedData) {
     return (
         <Snackbar open={openErrorSnackbar} autoHideDuration={3000} onClose={() => setOpenErrorSnackbar(false)}>
@@ -122,9 +118,10 @@ function CalculationMatrix() {
   const { criteria, selections, scoreboard } = decodedData as DataPayload;
   const { lambda_max, ci, cr } = criteria;
 
-  const handleGoBack = () => {
-    navigate('/');
+  const handleMatrixTable = () => {
+    navigate('/criteriaComparisonMatrix');
   };
+
   const renderMatrix = (matrixData: number[][]) => {
     return matrixData.map((row: number[], rowIndex: number) => (
         <StyledTableRow key={rowIndex}>
@@ -194,7 +191,7 @@ function CalculationMatrix() {
             <p className="font-bold">CI = {ci.toFixed(2)}</p>
             <p className="font-bold">CR = {cr.toFixed(2)}</p>
             <div className="mt-6">
-              <CustomButton variant="contained" onClick={handleGoBack}>Yêu cầu nhập lại</CustomButton>
+              <CustomButton variant="contained" onClick={handleMatrixTable}>Yêu cầu nhập lại</CustomButton>
             </div>
           </div>
 
@@ -364,26 +361,26 @@ function CalculationMatrix() {
                   <h1 className="text-xl font-bold text-center mb-6">
                     Phương án có điểm cao nhất:
                     <div className={"mt-3"}>
-                      <Chip label={scoreboard.highest_score} size={"medium"} sx={{fontSize: 18, backgroundColor: "black", color: 'white', py:2.3, px:2}} />
+                      <Chip label={scoreboard.highest_score} size={"medium"} sx={{ fontSize: 18, backgroundColor: "black", color: 'white', py: 2.3, px: 2 }} />
                     </div>
                   </h1>
 
                   <div className="flex my-5 ">
-                    <Button
-                        variant="outlined"
-                        sx={{
-                          borderColor: 'black',
-                          color: 'black',
-                          textTransform: 'none',
-                          '&:hover': {
-                            backgroundColor: '#e0e0e0',
-                            borderColor: 'black',
-                            color: 'black',
+                    <Button onClick={handleMatrixTable}
+                            variant="outlined"
+                            sx={{
+                              borderColor: 'black',
+                              color: 'black',
+                              textTransform: 'none',
+                              '&:hover': {
+                                backgroundColor: '#e0e0e0',
+                                borderColor: 'black',
+                                color: 'black',
 
-                          },
-                        }}
+                              },
+                            }}
                     >
-                      <ArrowBackIcon fontSize={"small"} sx={{ mr: 1 }}/> Nhập lại ma trận
+                      <ArrowBackIcon fontSize={"small"} sx={{ mr: 1 }} /> Nhập lại ma trận
                     </Button>
                   </div>
                 </div>
