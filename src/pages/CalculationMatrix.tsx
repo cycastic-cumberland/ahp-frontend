@@ -12,6 +12,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from "axios";
+
+const api = import.meta.env.VITE_API_URL;
 
 const CustomButton = styled(Button)({
   backgroundColor: 'black',
@@ -90,24 +93,30 @@ function CalculationMatrix() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const encodedData = searchParams.get("data");
-  const decodedData = encodedData ? JSON.parse(decodeURIComponent(encodedData)) : null;
+  const [decodedData, setDecondedData] = useState(null as DataPayload | null)
 
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    if (!decodedData) {
-      setErrorMessage('Không thể giải mã dữ liệu. Vui lòng thử lại!');
-      setOpenErrorSnackbar(true);
-      const timer = setTimeout(() => navigate('/'), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [decodedData, navigate]);
+    const id = Number(searchParams.get("id"))
+    fetchData(id)
+  }, [searchParams]);
 
   useEffect(() => {
     console.error(errorMessage)
   }, [errorMessage]);
+
+  const fetchData = async (id: number) => {
+    try {
+      const response = await axios.get(`${api}/result/${id}`)
+      setDecondedData(response.data as DataPayload)
+    } catch (e){
+      setErrorMessage('Không thể giải mã dữ liệu. Vui lòng thử lại!');
+      setOpenErrorSnackbar(true);
+      setTimeout(() => navigate('/'), 5000);
+    }
+  }
 
   if (!decodedData) {
     return (
@@ -119,8 +128,6 @@ function CalculationMatrix() {
     );
   }
 
-  const { criteria, selections, scoreboard } = decodedData as DataPayload;
-  const { lambda_max, ci, cr } = criteria;
 
   const handleMatrixTable = () => {
     navigate('/criteriaComparisonMatrix');
@@ -130,7 +137,7 @@ function CalculationMatrix() {
     return matrixData.map((row: number[], rowIndex: number) => (
         <StyledTableRow key={rowIndex}>
           <StyledTableCell sx={{ fontWeight: 'bold' }} component="th" scope="row">
-            {criteria.average.row_headers?.[rowIndex] || rowIndex + 1}
+            {decodedData.criteria.average.row_headers?.[rowIndex] || rowIndex + 1}
           </StyledTableCell>
           {row.map((cell: number, cellIndex: number) => (
               <StyledTableCell key={cellIndex} align="right">
@@ -141,7 +148,7 @@ function CalculationMatrix() {
     ));
   };
 
-  return (
+  return decodedData == null ? undefined : (
       <div className="w-full min-h-screen rounded-lg flex flex-col overflow-x-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-center">Tính toán ma trận</h1>
         <div className="space-y-5">
@@ -154,13 +161,13 @@ function CalculationMatrix() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell></StyledTableCell>
-                      {criteria.average.column_headers.map((header, index) => (
+                      {decodedData.criteria.average.column_headers.map((header, index) => (
                           <StyledTableCell key={index} align="right">{header}</StyledTableCell>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {criteria.average.data && renderMatrix(criteria.average.data)}
+                    {decodedData.criteria.average.data && renderMatrix(decodedData.criteria.average.data)}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -176,13 +183,13 @@ function CalculationMatrix() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell></StyledTableCell>
-                      {criteria.completed.column_headers.map((header, index) => (
+                      {decodedData.criteria.completed.column_headers.map((header, index) => (
                           <StyledTableCell key={index} align="right">{header}</StyledTableCell>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {criteria.completed.data && renderMatrix(criteria.completed.data)}
+                    {decodedData.criteria.completed.data && renderMatrix(decodedData.criteria.completed.data)}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -191,16 +198,16 @@ function CalculationMatrix() {
 
           {/* Global Criteria Stats */}
           <div className="ml-16">
-            <p className="font-bold">Lambda max = {lambda_max.toFixed(2)}</p>
-            <p className="font-bold">CI = {ci.toFixed(2)}</p>
-            <p className="font-bold">CR = {cr.toFixed(2)}</p>
+            <p className="font-bold">Lambda max = {decodedData.criteria.lambda_max.toFixed(2)}</p>
+            <p className="font-bold">CI = {decodedData.criteria.ci.toFixed(2)}</p>
+            <p className="font-bold">CR = {decodedData.criteria.cr.toFixed(2)}</p>
             <div className="mt-6">
               <CustomButton variant="contained" onClick={handleMatrixTable}>Yêu cầu nhập lại</CustomButton>
             </div>
           </div>
 
           {/* Selections Table */}
-          {ci < 0.1 && selections.map((selection, index) => (
+          {decodedData.criteria.ci < 0.1 && decodedData.selections.map((selection, index) => (
               <div key={index} className="mt-10">
                 <h1 className="text-xl font-bold text-gray-800 mb-6 flex justify-center">Ma trận: {selection.name}</h1>
                 <div>
@@ -254,7 +261,7 @@ function CalculationMatrix() {
           ))}
 
           {/* Rating Table */}
-          {cr < 0.1 && (
+          {decodedData.criteria.cr < 0.1 && (
               <>
                 <div className="mt-10">
                   <h1 className="text-xl font-bold mb-6">Bảng đánh giá</h1>
@@ -264,16 +271,16 @@ function CalculationMatrix() {
                         <TableHead>
                           <TableRow>
                             <StyledTableCell></StyledTableCell>
-                            {scoreboard.rating_table.column_headers.map((header, idx) => (
+                            {decodedData.scoreboard.rating_table.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">{header}</StyledTableCell>
                             ))}
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {scoreboard.rating_table.data.map((row, rowIndex) => (
+                          {decodedData.scoreboard.rating_table.data.map((row, rowIndex) => (
                               <StyledTableRow key={rowIndex}>
                                 <StyledTableCell sx={{ fontWeight: 'bold' }}>
-                                  {scoreboard.rating_table.row_headers[rowIndex] || rowIndex + 1}
+                                  {decodedData.scoreboard.rating_table.row_headers[rowIndex] || rowIndex + 1}
                                 </StyledTableCell>
                                 {row.map((cell, cellIndex) => (
                                     <StyledTableCell key={cellIndex} align="right">{cell.toFixed(2)}</StyledTableCell>
@@ -289,7 +296,7 @@ function CalculationMatrix() {
           )}
 
           {/* Criteria Weight Table */}
-          {cr < 0.1 && (
+          {decodedData.criteria.cr < 0.1 && (
               <>
                 <div className="mt-10">
                   <h1 className="text-xl font-bold mb-6">Bảng trọng số tiêu chí</h1>
@@ -299,16 +306,16 @@ function CalculationMatrix() {
                         <TableHead>
                           <TableRow>
                             <StyledTableCell></StyledTableCell>
-                            {scoreboard.criteria_weight_table.column_headers.map((header, idx) => (
+                            {decodedData.scoreboard.criteria_weight_table.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">{header}</StyledTableCell>
                             ))}
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {scoreboard.criteria_weight_table.data.map((row, rowIndex) => (
+                          {decodedData.scoreboard.criteria_weight_table.data.map((row, rowIndex) => (
                               <StyledTableRow key={rowIndex}>
                                 <StyledTableCell sx={{ fontWeight: 'bold' }}>
-                                  {scoreboard.criteria_weight_table.row_headers[rowIndex] || rowIndex + 1}
+                                  {decodedData.scoreboard.criteria_weight_table.row_headers[rowIndex] || rowIndex + 1}
                                 </StyledTableCell>
                                 {row.map((cell, cellIndex) => (
                                     <StyledTableCell key={cellIndex} align="right">{cell.toFixed(2)}</StyledTableCell>
@@ -324,7 +331,7 @@ function CalculationMatrix() {
           )}
 
           {/* Composited Table */}
-          {cr < 0.1 && (
+          {decodedData.criteria.cr < 0.1 && (
               <>
                 <div className="mt-10">
                   <h1 className="text-xl font-bold mb-6">Bảng điểm tổng hợp</h1>
@@ -334,16 +341,16 @@ function CalculationMatrix() {
                         <TableHead>
                           <TableRow>
                             <StyledTableCell></StyledTableCell>
-                            {scoreboard.composited.column_headers.map((header, idx) => (
+                            {decodedData.scoreboard.composited.column_headers.map((header, idx) => (
                                 <StyledTableCell key={idx} align="right">{header}</StyledTableCell>
                             ))}
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {scoreboard.composited.data.map((row, rowIndex) => (
+                          {decodedData.scoreboard.composited.data.map((row, rowIndex) => (
                               <StyledTableRow key={rowIndex}>
                                 <StyledTableCell sx={{ fontWeight: 'bold' }}>
-                                  {scoreboard.composited.row_headers[rowIndex] || rowIndex + 1}
+                                  {decodedData.scoreboard.composited.row_headers[rowIndex] || rowIndex + 1}
                                 </StyledTableCell>
                                 {row.map((cell, cellIndex) => (
                                     <StyledTableCell key={cellIndex} align="right">{cell.toFixed(2)}</StyledTableCell>
@@ -359,13 +366,13 @@ function CalculationMatrix() {
           )}
 
           {/* Final Result */}
-          {cr < 0.1 && (
+          {decodedData.criteria.cr < 0.1 && (
               <>
                 <div className="mt-10">
                   <h1 className="text-xl font-bold text-center mb-6">
                     Phương án có điểm cao nhất:
                     <div className={"mt-3"}>
-                      <Chip label={scoreboard.highest_score} size={"medium"} sx={{ fontSize: 18, backgroundColor: "black", color: 'white', py: 2.3, px: 2 }} />
+                      <Chip label={decodedData.scoreboard.highest_score} size={"medium"} sx={{ fontSize: 18, backgroundColor: "black", color: 'white', py: 2.3, px: 2 }} />
                     </div>
                   </h1>
 
