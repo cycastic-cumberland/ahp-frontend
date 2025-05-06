@@ -12,6 +12,10 @@ export interface AhpRequestPayload {
   selection_matrices: MatrixData[];
 }
 
+export type AhpHistoryResponse = {
+  id: number
+}
+
 export const emptyPayload: AhpRequestPayload = {
   criteria_matrix: {
     data: [],
@@ -41,11 +45,11 @@ export const emptyPayload: AhpRequestPayload = {
   ]
 };
 
-export const calculateAHP = async (payload: AhpRequestPayload) => {
+export const calculateAHP = async (payload: AhpRequestPayload): Promise<AhpHistoryResponse> => {
   try {
     console.log("Payload gửi lên:", payload);
-    const response = await axios.post(`${api}/process-matrix`, payload);
-    return response.data;
+    const response = await axios.post(`${api}/process-and-save-matrix`, payload);
+    return response.data as AhpHistoryResponse;
   } catch (error) {
     console.error('Lỗi khi gọi API AHP:', error);
     throw error;

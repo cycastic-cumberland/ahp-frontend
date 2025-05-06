@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import MatrixTable from '../components/MatrixTable.tsx';
-import { calculateAHP } from '../api/AhpApi.tsx';
+import {AhpHistoryResponse, calculateAHP} from '../api/AhpApi.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const CriteriaComparisonMatrix: React.FC = () => {
@@ -71,10 +71,8 @@ const CriteriaComparisonMatrix: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const handleNavigate = (result: any) => {
-    const jsonString = JSON.stringify(result);
-    const encoded = encodeURIComponent(jsonString);
-    navigate(`/calculationMatrix?data=${encoded}`);
+    const handleNavigate = (result: AhpHistoryResponse) => {
+        navigate(`/calculationMatrix?id=${result.id}`);
     };
 
     const handleCalculateClick = async () => {
