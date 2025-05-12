@@ -113,7 +113,7 @@ function CalculationMatrix() {
       const response = await axios.get(`${api}/result/${id}`)
       setDecondedData(response.data as DataPayload)
     } catch (e) {
-      setErrorMessage('Không thể giải mã dữ liệu. Vui lòng thử lại!');
+      setErrorMessage('Không thể tải dữ liệu. Vui lòng thử lại!');
       setOpenErrorSnackbar(true);
       setTimeout(() => navigate('/'), 5000);
     }
@@ -128,7 +128,7 @@ function CalculationMatrix() {
       </Snackbar>
     );
   }
-
+  
   const handleMatrixTable = () => {
     navigate('/criteriaComparisonMatrix');
   };
@@ -136,7 +136,7 @@ function CalculationMatrix() {
   const handleCharts = () => {
     const id = Number(searchParams.get("id"));
     navigate(`/charts?id=${id}`);
-  };  
+  };
 
   const renderMatrix = (matrixData: number[][]) => {
     return matrixData.map((row: number[], rowIndex: number) => (
@@ -207,7 +207,15 @@ function CalculationMatrix() {
           <p className="font-bold">CI = {decodedData.criteria.ci.toFixed(2)}</p>
           <p className="font-bold">CR = {decodedData.criteria.cr.toFixed(2)}</p>
           <div className="mt-6">
-            <CustomButton variant="contained" onClick={handleMatrixTable}>Yêu cầu nhập lại</CustomButton>
+            {decodedData.criteria.cr > 0.1 && (
+              <p className='text-red-500 mb-2'>CR = {decodedData.criteria.cr.toFixed(2)} &gt; 0.1 (10%), hãy kiểm tra và nhập lại ma trận</p>
+            )}
+            <CustomButton variant="contained" onClick={handleMatrixTable} sx={{
+              backgroundColor: decodedData.criteria.cr > 0.1 ? 'red' : 'black',
+              '&:hover': {
+                backgroundColor: decodedData.criteria.cr > 0.1 ? '#cc0000' : '#333',
+              },
+            }}>Yêu cầu nhập lại</CustomButton>
           </div>
         </div>
 
