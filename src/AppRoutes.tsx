@@ -2,6 +2,7 @@ import MainLayout from './layouts/MainLayout.tsx';
 import LandingPage from "./pages/LandingPage.tsx";
 import CalculationMatrix from './pages/CalculationMatrix.tsx';
 import CriteriaComparisonMatrix from './pages/CriteriaComparisonMatrix.tsx';
+import HistoryPage from './pages/HistoryPage.tsx';
 
 
 const AppRoutes =[
@@ -20,6 +21,10 @@ const AppRoutes =[
             {
                 path: "/criteriaComparisonMatrix",
                 element: <CriteriaComparisonMatrix/>
+            },
+            {
+                path: "/history",
+                element: <HistoryPage/>
             },
         ]
     },
