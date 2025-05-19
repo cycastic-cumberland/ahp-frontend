@@ -3,7 +3,7 @@ import LandingPage from "./pages/LandingPage.tsx";
 import CalculationMatrix from './pages/CalculationMatrix.tsx';
 import CriteriaComparisonMatrix from './pages/CriteriaComparisonMatrix.tsx';
 import HistoryPage from './pages/HistoryPage.tsx';
-
+import Charts from './pages/Charts.tsx';
 
 const AppRoutes =[
     {
@@ -25,6 +25,10 @@ const AppRoutes =[
             {
                 path: "/history",
                 element: <HistoryPage/>
+            },
+            {
+                path: "/charts",
+                element: <Charts/>
             },
         ]
     },
