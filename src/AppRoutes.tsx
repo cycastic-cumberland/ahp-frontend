@@ -4,6 +4,8 @@ import CalculationMatrix from './pages/CalculationMatrix.tsx';
 import CriteriaComparisonMatrix from './pages/CriteriaComparisonMatrix.tsx';
 import HistoryPage from './pages/HistoryPage.tsx';
 import Charts from './pages/Charts.tsx';
+import FilesUpload from './components/FilesUpload.tsx';
+import MatrixUploadPage from './pages/MatrixUploadPage.tsx';
 
 const AppRoutes =[
     {
@@ -29,6 +31,10 @@ const AppRoutes =[
             {
                 path: "/charts",
                 element: <Charts/>
+            },
+            {
+                path: "/files-upload",
+                element: <MatrixUploadPage/>
             },
         ]
     },

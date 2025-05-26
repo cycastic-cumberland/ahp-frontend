@@ -136,7 +136,7 @@ const HistoryPage: React.FC = () => {
                     <td className="px-6 py-4 text-sm">
                       <button
                         onClick={() => handleViewDetails(item.id)}
-                        className="text-blue-600 hover:text-blue-900 hover:underline"
+                        className="text-black  hover:underline"
                       >
                         Xem chi tiết
                       </button>
@@ -176,7 +176,7 @@ const HistoryPage: React.FC = () => {
                   <button
                     key={pageNum}
                     onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-1 rounded-md text-sm ${pagination.page === pageNum ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
+                    className={`px-3 py-1 rounded-md text-sm ${pagination.page === pageNum ? 'bg-black text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
                   >
                     {pageNum}
                   </button>
