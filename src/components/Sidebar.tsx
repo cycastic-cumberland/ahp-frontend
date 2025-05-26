@@ -1,10 +1,12 @@
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {FiEdit, FiHome} from "react-icons/fi";
 import { FaRegEye } from "react-icons/fa";
+import { MdOutlineUploadFile } from "react-icons/md";
 
 const menuItems = [
     { path: '/', label: 'Giới thiệu', icon: FiHome, color:'text-black' },
-    { path: '/criteriaComparisonMatrix', label: 'Nhập dữ liệu', icon: FiEdit, color:'text-black' },
+    { path: '/files-upload', label: 'Tải file', icon: MdOutlineUploadFile, color:'text-black' },
+    { path: '/criteriaComparisonMatrix', label: 'Nhập thủ công', icon: FiEdit, color:'text-black' },
     { path: '/history', label: 'Lịch sử', icon: FaRegEye, color:'text-black' },
 ];
 
