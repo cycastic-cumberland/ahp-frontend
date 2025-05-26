@@ -66,7 +66,7 @@ const MatrixUploadPage: React.FC = () => {
 
       <FilesUpload
         title="Ma trận so sánh cặp các tiêu chí"
-        description="Vui lòng tải lên file CSV chứa ma trận tiêu chí (chỉ 1 file)"
+        description="Vui lòng tải lên file .csv hoặc .xlsx chứa ma trận tiêu chí (chỉ 1 file)"
         onFilesChange={handleCriteriaFilesChange}
         acceptedFileTypes={['.csv', '.xlsx']}
         allowMultiple={false}
@@ -74,7 +74,7 @@ const MatrixUploadPage: React.FC = () => {
 
       <FilesUpload
         title="Ma trận so sánh cặp các phương án theo từng tiêu chí"
-        description="Vui lòng tải lên các file CSV chứa ma trận so sánh cặp các phương án theo từng tiêu chí"
+        description="Vui lòng tải lên các file .csv hoặc .xlsx chứa ma trận so sánh cặp các phương án theo từng tiêu chí"
         onFilesChange={handleSelectionFilesChange}
         acceptedFileTypes={['.csv', '.xlsx']}
         allowMultiple={true}
